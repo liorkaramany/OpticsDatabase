@@ -15,31 +15,8 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void text(View view) {
-        Intent t = new Intent(this, Text.class);
+    public void add(View view) {
+        Intent t = new Intent(this, Input.class);
         startActivity(t);
-    }
-
-    public void camera(View view) {
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        menu.add("Credits");
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (item.getTitle().toString().equals("Credits"))
-        {
-            Intent t = new Intent(this, Credits.class);
-            startActivity(t);
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

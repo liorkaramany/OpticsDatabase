@@ -47,6 +47,9 @@ public class Text extends AppCompatActivity {
             Customer customer = new Customer(id, n, Integer.parseInt(a), Double.parseDouble(l), Double.parseDouble(r), Double.parseDouble(p));
 
             ref.child(id).setValue(customer);
+
+            Intent t = new Intent(this, Main.class);
+            startActivity(t);
         }
         else
             Toast.makeText(this, "You haven't entered all the necessary information", Toast.LENGTH_LONG).show();
