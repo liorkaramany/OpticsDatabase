@@ -4,18 +4,36 @@ public class Customer {
     public String id;
     public String name;
     public int age;
-    public int num;
+    public double left;
+    public double right;
     public double price;
 
-    public Customer(String id, String name, int age, int num, double price) {
+    public Customer() {
+    }
+
+    public Customer(String id, String name, int age, double left, double right, double price) {
         this.id = id;
         this.name = name;
         this.age = age;
-        this.num = num;
+        this.left = left;
+        this.right = right;
         this.price = price;
     }
 
-    public Customer() {
+    public double getLeft() {
+        return left;
+    }
+
+    public void setLeft(double left) {
+        this.left = left;
+    }
+
+    public double getRight() {
+        return right;
+    }
+
+    public void setRight(double right) {
+        this.right = right;
     }
 
     public String getId() {
@@ -40,14 +58,6 @@ public class Customer {
 
     public void setAge(int age) {
         this.age = age;
-    }
-
-    public int getNum() {
-        return num;
-    }
-
-    public void setNum(int num) {
-        this.num = num;
     }
 
     public double getPrice() {
