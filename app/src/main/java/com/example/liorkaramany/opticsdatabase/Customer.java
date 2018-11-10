@@ -7,17 +7,19 @@ public class Customer {
     public double left;
     public double right;
     public double price;
+    public String url;
 
     public Customer() {
     }
 
-    public Customer(String id, String name, int age, double left, double right, double price) {
+    public Customer(String id, String name, int age, double left, double right, double price, String url) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.left = left;
         this.right = right;
-        this.price = price;
+
+        this.url = url;
     }
 
     public double getLeft() {
@@ -66,5 +68,13 @@ public class Customer {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

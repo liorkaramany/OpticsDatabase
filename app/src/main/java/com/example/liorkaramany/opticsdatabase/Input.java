@@ -22,5 +22,7 @@ public class Input extends AppCompatActivity {
     }
 
     public void camera(View view) {
+        Intent t = new Intent(this, Camera.class);
+        startActivity(t);
     }
 }

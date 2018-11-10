@@ -73,7 +73,7 @@ public class Text extends AppCompatActivity {
             {
                 String id = ref.push().getKey();
 
-                Customer customer = new Customer(id, n, Integer.parseInt(a), Double.parseDouble(l), Double.parseDouble(r), Double.parseDouble(p));
+                Customer customer = new Customer(id, n, Integer.parseInt(a), Double.parseDouble(l), Double.parseDouble(r), Double.parseDouble(p), "");
 
                 ref.child(id).setValue(customer);
 
@@ -84,7 +84,7 @@ public class Text extends AppCompatActivity {
             }
             else
             {
-                Customer customer = new Customer(idIntent, n, Integer.parseInt(a), Double.parseDouble(l), Double.parseDouble(r), Double.parseDouble(p));
+                Customer customer = new Customer(idIntent, n, Integer.parseInt(a), Double.parseDouble(l), Double.parseDouble(r), Double.parseDouble(p), "");
                 ref.child(idIntent).setValue(customer);
                 Toast.makeText(this, "Customer has been edited", Toast.LENGTH_SHORT).show();
                 finish();
