@@ -16,6 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Text" />
+        <activity android:name=".Credits"></activity>
     </application>
 
 </manifest>
