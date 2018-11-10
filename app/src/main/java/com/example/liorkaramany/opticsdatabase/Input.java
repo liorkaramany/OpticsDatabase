@@ -22,24 +22,4 @@ public class Input extends AppCompatActivity {
 
     public void camera(View view) {
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        menu.add("Credits");
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (item.getTitle().toString().equals("Credits"))
-        {
-            Intent t = new Intent(this, Credits.class);
-            startActivity(t);
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }
