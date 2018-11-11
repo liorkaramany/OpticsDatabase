@@ -29,7 +29,9 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -78,10 +80,10 @@ public class Camera extends AppCompatActivity {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
+                uri = FileProvider.getUriForFile(this,
                         "com.example.liorkaramany.opticsdatabase.fileprovider",
                         photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
@@ -114,7 +116,7 @@ public class Camera extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             try {
 
-                uri = Uri.parse(mCurrentPhotoPath);
+                //uri = Uri.parse(mCurrentPhotoPath);
 
                 img.setImageURI(uri);
 
@@ -132,19 +134,26 @@ public class Camera extends AppCompatActivity {
             progress.setMessage("Uploading in process");
             progress.show();
 
-            String id = ref.push().getKey();
-
-            ref.child(id).setValue(new Customer(id, "", 0, 0,0 ,0, ""));
+            final String id = ref.push().getKey();
 
             r.child(id).putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            String url = uri.toString();
+
+                            ref.child(id).setValue(new Customer(id, "", 0, 0,0 ,0, url));
+                        }
+                    });
                     progress.dismiss();
                     Toast.makeText(Camera.this, "Customer has been uploaded", Toast.LENGTH_SHORT).show();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
+                    progress.dismiss();
                     Toast.makeText(Camera.this, "Push failed", Toast.LENGTH_SHORT).show();
                 }
             });
