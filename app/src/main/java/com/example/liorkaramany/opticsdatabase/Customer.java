@@ -18,6 +18,7 @@ public class Customer {
         this.age = age;
         this.left = left;
         this.right = right;
+        this.price = price;
 
         this.url = url;
     }
