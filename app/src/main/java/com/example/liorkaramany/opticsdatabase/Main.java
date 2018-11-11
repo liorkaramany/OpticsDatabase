@@ -17,6 +17,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,8 +103,11 @@ public class Main extends AppCompatActivity implements View.OnCreateContextMenuL
         else if (option.equals("Delete"))
         {
             String id = customer.getId();
+            if (!customer.getUrl().equals("")) {
+                StorageReference r = FirebaseStorage.getInstance().getReferenceFromUrl(customer.getUrl());
+                r.delete();
+            }
             ref.child(id).removeValue();
-
             Toast.makeText(this, "Customer has been deleted", Toast.LENGTH_SHORT).show();
         }
 

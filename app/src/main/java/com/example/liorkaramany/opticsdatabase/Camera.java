@@ -149,6 +149,10 @@ public class Camera extends AppCompatActivity {
                     });
                     progress.dismiss();
                     Toast.makeText(Camera.this, "Customer has been uploaded", Toast.LENGTH_SHORT).show();
+
+                    Intent t = new Intent(Camera.this, Main.class);
+                    startActivity(t);
+
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
