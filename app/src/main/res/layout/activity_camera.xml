@@ -18,12 +18,11 @@
         android:id="@+id/img"
         android:layout_width="match_parent"
         android:layout_height="350dp"
-        android:layout_marginVertical="10dp"
-        android:layout_marginHorizontal="5dp"/>
+        android:layout_margin="5dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
@@ -40,4 +39,10 @@
             android:layout_weight="1"
             android:text="Upload" />
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

@@ -53,6 +53,7 @@ public class CustomerList extends ArrayAdapter<Customer> {
 
         if (!customer.getUrl().equals("")) {
             Picasso.get().load(customer.getUrl()).fit().centerInside().into(img);
+            img.setRotation(90);
             name.setVisibility(View.GONE);
             age.setVisibility(View.GONE);
             left.setVisibility(View.GONE);

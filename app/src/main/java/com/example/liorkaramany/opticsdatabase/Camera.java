@@ -1,22 +1,21 @@
 package com.example.liorkaramany.opticsdatabase;
 
 import android.app.ProgressDialog;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
-import android.os.StrictMode;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -24,14 +23,13 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -45,12 +43,13 @@ public class Camera extends AppCompatActivity {
     StorageReference r;
     DatabaseReference ref;
 
-    ProgressDialog progress;
+    ProgressBar progressBar;
 
     Uri uri = null;
 
     String mCurrentPhotoPath;
-    Bitmap mImageBitmap;
+
+    StorageTask uploadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +61,7 @@ public class Camera extends AppCompatActivity {
         r = FirebaseStorage.getInstance().getReference("customers");
         ref = FirebaseDatabase.getInstance().getReference("customers");
 
-        progress = new ProgressDialog(this);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
     }
 
@@ -83,6 +82,17 @@ public class Camera extends AppCompatActivity {
                 uri = FileProvider.getUriForFile(this,
                         "com.example.liorkaramany.opticsdatabase.fileprovider",
                         photoFile);
+
+                /*Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[]{MediaStore.Images.Media.DATA, MediaStore.Images.Media.DATE_ADDED, MediaStore.Images.ImageColumns.ORIENTATION}, MediaStore.Images.Media.DATE_ADDED, null, "date_added ASC");
+                if(cursor != null && cursor.moveToFirst())
+                {
+                    do {
+                        uri = Uri.parse(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA)));
+                        //photoPath = uri.toString();
+                    }while(cursor.moveToNext());
+                    cursor.close();
+                }*/
+
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
@@ -116,52 +126,67 @@ public class Camera extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             try {
 
-                //uri = Uri.parse(mCurrentPhotoPath);
-
                 img.setImageURI(uri);
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            img.setRotation(90);
+
         }
 
     }
 
     public void upload(View view) {
 
-        if (uri != null) {
+        if (uploadTask != null)
+            Toast.makeText(this, "Image is currently being uploaded", Toast.LENGTH_LONG).show();
+        else {
+            if (uri != null) {
 
-            progress.setMessage("Uploading in process");
-            progress.show();
+                final String id = ref.push().getKey();
 
-            final String id = ref.push().getKey();
+                uploadTask = r.child(id).putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                String url = uri.toString();
 
-            r.child(id).putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            String url = uri.toString();
+                                ref.child(id).setValue(new Customer(id, "", 0, 0, 0, 0, url));
+                            }
+                        });
 
-                            ref.child(id).setValue(new Customer(id, "", 0, 0,0 ,0, url));
-                        }
-                    });
-                    progress.dismiss();
-                    Toast.makeText(Camera.this, "Customer has been uploaded", Toast.LENGTH_SHORT).show();
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setProgress(0);
+                            }
+                        }, 500);
 
-                    Intent t = new Intent(Camera.this, Main.class);
-                    startActivity(t);
+                        Toast.makeText(Camera.this, "Customer has been uploaded", Toast.LENGTH_SHORT).show();
 
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    progress.dismiss();
-                    Toast.makeText(Camera.this, "Push failed", Toast.LENGTH_SHORT).show();
-                }
-            });
+                        Intent t = new Intent(Camera.this, Main.class);
+                        startActivity(t);
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressBar.setProgress(0);
+                        Toast.makeText(Camera.this, "Push failed", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                        progressBar.setProgress((int) progress);
+                    }
+                });
+            } else Toast.makeText(this, "You didn't capture a photo", Toast.LENGTH_LONG).show();
         }
-        else Toast.makeText(this, "You didn't capture a photo", Toast.LENGTH_LONG).show();
     }
 }
