@@ -88,17 +88,28 @@ public class Main extends AppCompatActivity implements View.OnCreateContextMenuL
         String option = item.getTitle().toString();
         if (option.equals("Edit"))
         {
-            Intent t = new Intent(this, Text.class);
-            t.putExtra("sign", 1);
+            if (customer.getUrl().isEmpty()) {
+                Intent t = new Intent(this, Text.class);
+                t.putExtra("sign", 1);
 
-            t.putExtra("id", customer.getId());
-            t.putExtra("name", customer.getName());
-            t.putExtra("age", customer.getAge());
-            t.putExtra("left", customer.getLeft());
-            t.putExtra("right", customer.getRight());
-            t.putExtra("price", customer.getPrice());
+                t.putExtra("id", customer.getId());
+                t.putExtra("name", customer.getName());
+                t.putExtra("age", customer.getAge());
+                t.putExtra("left", customer.getLeft());
+                t.putExtra("right", customer.getRight());
+                t.putExtra("price", customer.getPrice());
 
-            startActivity(t);
+                startActivity(t);
+            }
+            else
+            {
+                Intent t = new Intent(this, Camera.class);
+                t.putExtra("sign", 1);
+
+                t.putExtra("id", customer.getId());
+                t.putExtra("url", customer.getUrl());
+                startActivity(t);
+            }
         }
         else if (option.equals("Delete"))
         {

@@ -14,6 +14,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +41,7 @@ public class Camera extends AppCompatActivity {
     static final int REQUEST_TAKE_PHOTO = 1;
 
     ImageView img;
+    Button back, upload;
 
     StorageReference r;
     DatabaseReference ref;
@@ -51,6 +54,9 @@ public class Camera extends AppCompatActivity {
 
     StorageTask uploadTask;
 
+    int sign;
+    String url, idFromIntent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +68,20 @@ public class Camera extends AppCompatActivity {
         ref = FirebaseDatabase.getInstance().getReference("customers");
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        upload = (Button) findViewById(R.id.upload);
+        back = (Button) findViewById(R.id.back);
+
+        Intent gt = getIntent();
+        sign = gt.getIntExtra("sign", 0);
+        url = gt.getStringExtra("url");
+        idFromIntent = gt.getStringExtra("id");
+        if (sign == 1)
+        {
+            upload.setText("Save");
+            back.setText("Cancel");
+            Picasso.get().load(url).fit().centerInside().into(img);
+            img.setRotation(90);
+        }
 
     }
 
@@ -82,16 +102,6 @@ public class Camera extends AppCompatActivity {
                 uri = FileProvider.getUriForFile(this,
                         "com.example.liorkaramany.opticsdatabase.fileprovider",
                         photoFile);
-
-                /*Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[]{MediaStore.Images.Media.DATA, MediaStore.Images.Media.DATE_ADDED, MediaStore.Images.ImageColumns.ORIENTATION}, MediaStore.Images.Media.DATE_ADDED, null, "date_added ASC");
-                if(cursor != null && cursor.moveToFirst())
-                {
-                    do {
-                        uri = Uri.parse(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA)));
-                        //photoPath = uri.toString();
-                    }while(cursor.moveToNext());
-                    cursor.close();
-                }*/
 
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
@@ -145,9 +155,19 @@ public class Camera extends AppCompatActivity {
         else {
             if (uri != null) {
 
-                final String id = ref.push().getKey();
+                final String id;
 
-                uploadTask = r.child(id).putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                StorageReference tmpRef;
+                if (sign == 0) {
+                    id = ref.push().getKey();
+                    tmpRef = r.child(id);
+                }
+                else {
+                    id = idFromIntent;
+                    tmpRef = FirebaseStorage.getInstance().getReferenceFromUrl(url);
+                }
+
+                uploadTask = tmpRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -167,7 +187,10 @@ public class Camera extends AppCompatActivity {
                             }
                         }, 500);
 
-                        Toast.makeText(Camera.this, "Customer has been uploaded", Toast.LENGTH_SHORT).show();
+                        if (sign == 0)
+                            Toast.makeText(Camera.this, "Customer has been uploaded", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(Camera.this, "Customer has been edited", Toast.LENGTH_SHORT).show();
 
                         Intent t = new Intent(Camera.this, Main.class);
                         startActivity(t);
