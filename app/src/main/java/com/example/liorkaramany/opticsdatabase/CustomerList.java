@@ -15,11 +15,32 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+/**
+ * @author Lior Karamany
+ * @version 1.0
+ * @since 1.0
+ */
 public class CustomerList extends ArrayAdapter<Customer> {
 
+    /**
+     * The activity that every item in the list will show.
+     */
     private Activity context;
+    /**
+     * The list of customers that the list will display.
+     */
     private List<Customer> customerList;
 
+    /**
+     * Create a CustomerList object.
+     * <p>
+     * Create a CustomerList object with a given activity and a list of customers.
+     * </p>
+     *
+     * @param  context The activity that every item in the list will show.
+     * @param  customerList The list of customers that the list will display.
+     * @return A reference to the new CustomerList object.
+     */
     public CustomerList(Activity context, List<Customer> customerList)
     {
         super(context, R.layout.list_layout, customerList);
@@ -27,6 +48,16 @@ public class CustomerList extends ArrayAdapter<Customer> {
         this.customerList = customerList;
     }
 
+
+    /**
+     * Get the view of the ListView.
+     * <p>
+     * Get the view of the ListView (what it shows immediately after it's connected to the adapter).
+     * </p>
+     *
+     * @param  position The position of an item in the list.
+     * @return The view of the ListView.
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

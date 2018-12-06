@@ -23,10 +23,24 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Lior Karamany
+ * @version 1.0
+ * @since 1.0
+ */
 public class Main extends AppCompatActivity implements View.OnCreateContextMenuListener {
 
+    /**
+     * The ListView that displays all the customers.
+     */
     ListView list;
+    /**
+     * The DatabaseReference that refers to the Firebase database.
+     */
     DatabaseReference ref;
+    /**
+     * The list which stores the customers to display.
+     */
     List<Customer> customerList;
 
     @Override
@@ -125,6 +139,9 @@ public class Main extends AppCompatActivity implements View.OnCreateContextMenuL
         return super.onContextItemSelected(item);
     }
 
+    /**
+     * Go to the Input activity.
+     */
     public void add(View view) {
         Intent t = new Intent(this, Input.class);
         startActivity(t);

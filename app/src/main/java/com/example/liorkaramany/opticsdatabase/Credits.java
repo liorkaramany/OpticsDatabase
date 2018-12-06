@@ -4,6 +4,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+/**
+ * @author Lior Karamany
+ * @version 1.0
+ * @since 1.0
+ */
 public class Credits extends AppCompatActivity {
 
     @Override
@@ -12,6 +17,9 @@ public class Credits extends AppCompatActivity {
         setContentView(R.layout.activity_credits);
     }
 
+    /**
+     * Go back to the previous activity.
+     */
     public void back(View view) {
         finish();
     }
