@@ -79,8 +79,7 @@ public class Text extends AppCompatActivity {
 
                 Toast.makeText(this, "Customer has been added", Toast.LENGTH_SHORT).show();
 
-                Intent t = new Intent(this, Main.class);
-                startActivity(t);
+                finish();
             }
             else
             {

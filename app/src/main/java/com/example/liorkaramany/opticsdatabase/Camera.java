@@ -192,8 +192,7 @@ public class Camera extends AppCompatActivity {
                         else
                             Toast.makeText(Camera.this, "Customer has been edited", Toast.LENGTH_SHORT).show();
 
-                        Intent t = new Intent(Camera.this, Main.class);
-                        startActivity(t);
+                        finish();
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
