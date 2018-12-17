@@ -7,6 +7,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+/**
+ * @author Lior Karamany
+ * @version 1.0
+ * @since 1.0
+ */
 public class Input extends AppCompatActivity {
 
     @Override
@@ -16,11 +21,17 @@ public class Input extends AppCompatActivity {
 
     }
 
+    /**
+     * Go to the Text activity.
+     */
     public void text(View view) {
         Intent t = new Intent(this, Text.class);
         startActivity(t);
     }
 
+    /**
+     * Go to the Camera activity.
+     */
     public void camera(View view) {
         Intent t = new Intent(this, Camera.class);
         startActivity(t);
