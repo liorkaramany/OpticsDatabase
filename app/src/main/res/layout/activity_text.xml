@@ -19,54 +19,61 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <EditText
-        android:id="@+id/name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Name" />
-
-    <EditText
-        android:id="@+id/age"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Age"
-        android:inputType="number" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/left"
-            android:layout_width="wrap_content"
+            android:id="@+id/fname"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Left eye"
+            android:ems="20"
             android:layout_weight="1"
-            android:inputType="numberSigned|numberDecimal" />
+            android:hint="First name"
+            android:inputType="textPersonName" />
 
         <EditText
-            android:id="@+id/right"
+            android:id="@+id/lname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Right eye"
             android:layout_weight="1"
-            android:inputType="numberSigned|numberDecimal" />
-
+            android:ems="20"
+            android:inputType="textPersonName"
+            android:hint="Last name" />
     </LinearLayout>
 
     <EditText
-        android:id="@+id/price"
+        android:id="@+id/address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Price"
-        android:inputType="numberDecimal" />
+        android:hint="Address"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/city"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="City"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Phone"
+        android:inputType="phone" />
+
+    <EditText
+        android:id="@+id/mobile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Mobile"
+        android:inputType="phone" />
 
     <LinearLayout
         android:layout_width="match_parent"

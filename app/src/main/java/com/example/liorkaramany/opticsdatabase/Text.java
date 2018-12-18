@@ -13,8 +13,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class Text extends AppCompatActivity {
 
-    EditText name, age, left, right, price;
-
+    EditText fname, lname, address, city, phone, mobile;
     Button leftBtn, rightBtn;
 
     DatabaseReference ref;
@@ -27,11 +26,12 @@ public class Text extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text);
 
-        name = (EditText) findViewById(R.id.name);
-        age = (EditText) findViewById(R.id.age);
-        left = (EditText) findViewById(R.id.left);
-        right = (EditText) findViewById(R.id.right);
-        price = (EditText) findViewById(R.id.price);
+        fname = (EditText) findViewById(R.id.fname);
+        lname = (EditText) findViewById(R.id.lname);
+        address = (EditText) findViewById(R.id.address);
+        city = (EditText) findViewById(R.id.city);
+        phone = (EditText) findViewById(R.id.phone);
+        mobile = (EditText) findViewById(R.id.mobile);
 
         leftBtn = (Button) findViewById(R.id.leftBtn);
         rightBtn = (Button) findViewById(R.id.rightBtn);
@@ -46,34 +46,32 @@ public class Text extends AppCompatActivity {
             leftBtn.setText("Cancel");
             rightBtn.setText("Save");
 
-            name.setText(gt.getStringExtra("name"));
-            age.setText(""+gt.getIntExtra("age", 0));
-            left.setText(""+gt.getDoubleExtra("left", 0));
-            right.setText(""+gt.getDoubleExtra("right", 0));
-            price.setText(""+gt.getDoubleExtra("price", 0));
-
-            idIntent = gt.getStringExtra("id");
+            fname.setText(gt.getStringExtra("fname"));
+            lname.setText(gt.getStringExtra("lname"));
+            address.setText(gt.getStringExtra("address"));
+            city.setText(gt.getStringExtra("city"));
+            phone.setText(gt.getStringExtra("phone"));
+            mobile.setText(gt.getStringExtra("mobile"));
+            idIntent = gt.getStringExtra("customerID");
         }
     }
 
     public void next(View view) {
-        String n = name.getText().toString();
-        String a = age.getText().toString();
-        String l = left.getText().toString();
-        String r = right.getText().toString();
-        String p = price.getText().toString();
+        String fn = fname.getText().toString();
+        String ln = lname.getText().toString();
+        String a = address.getText().toString();
+        String c = city.getText().toString();
+        String p = phone.getText().toString();
+        String m = mobile.getText().toString();
 
-        if (!n.equals("") && !a.equals("")
-                && !l.equals("-") && !l.equals(".") && !l.equals("")
-                && !r.equals("-") && !r.equals(".") && !r.equals("")
-                && !p.equals("") && !p.equals("."))
+        if (!fn.equals("") && !ln.equals("") && !a.equals("") && !c.equals("") && !p.equals("") && !m.equals(""))
         {
 
             if (sign == 0)
             {
                 String id = ref.push().getKey();
 
-                Customer customer = new Customer(id, n, Integer.parseInt(a), Double.parseDouble(l), Double.parseDouble(r), Double.parseDouble(p), "");
+                Customer customer = new Customer(id, fn, ln, a, c, p, m);
 
                 ref.child(id).setValue(customer);
 
@@ -83,7 +81,7 @@ public class Text extends AppCompatActivity {
             }
             else
             {
-                Customer customer = new Customer(idIntent, n, Integer.parseInt(a), Double.parseDouble(l), Double.parseDouble(r), Double.parseDouble(p), "");
+                Customer customer = new Customer(idIntent, fn, ln, a, c, p, m);
                 ref.child(idIntent).setValue(customer);
                 Toast.makeText(this, "Customer has been edited", Toast.LENGTH_SHORT).show();
                 finish();
